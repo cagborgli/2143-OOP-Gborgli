@@ -1,0 +1,104 @@
+#Christopher Gborgli
+
+class fraction(object):
+    def __init__(self, n=None , d=None, w=0):
+        self.numerator = n
+        self.denominator = d
+        self.wholenumber = w
+
+#@function: __str__
+#@description: print formats
+#@param: none
+#@returns: none
+    def __str__(self):
+        if self.denominator == 1:
+            return "%d" % self.numerator
+        if self.numerator ==0:
+            return " %d " % self.wholenumber 
+        if self.wholenumber == 0:
+            return " %d/%d" % (self.numerator , self.denominator)
+        else:
+            return "%d  %d/%d" % (self.wholenumber, self.numerator , self.denominator)
+
+    def numerator(self,n):
+        self.numerator = n 
+
+    def denominator(self,d):
+        self.denominator = d
+    
+    def wholenumber(self,w):
+        self.wholenumber = w
+
+#@function: gcd
+#@description: calculates the greatest common divisor
+#@param: two denominators
+#@returns: gcd
+    def gcd(self,a,b):
+        if b == 0:
+            return a
+        if a > b:
+            return self.gcd(b,b%a)
+        else:
+            return self.gcd(a,a%b)
+#@function: lcd
+#@description: calculates the Lowest common multiple
+#@param: two denominators
+#@returns: common multiple
+    def lcd(self,a,b):
+        if a%b == 0:
+            return a
+        if b%a == 0:
+            return b
+        if a%b or b%a != 0:
+            return self.gcd(a,b)
+
+#@function: __mul__
+#@description: multiple two fractions
+#@param: two fractions
+#@returns: the product of two fraction reduced to its lowest term
+    def __mul__(self,rhs):
+        x = self.numerator * rhs.numerator
+        y = self.denominator * rhs.denominator
+        z = 0
+        if y != 0 and x != 0:
+            if x > y:
+                z= int(x/y)
+                x = (x%y)
+        if x < y:
+            for i in range(1,x+1):
+                if y%i == 0 and x%i == 0:
+                    x /=i 
+                    y /=i
+        if x == y:
+            y =1 
+            x = 1            
+        return fraction(x,y,z)
+
+#@function: __add__
+#@description: adds two fractions
+#@param: two fractions
+#@returns: the sum two fraction reduced to its lowest term
+    def __add__(self,rhs):
+        y = self.lcd(self.denominator,rhs.denominator)
+        x = (self.numerator * (y/self.denominator)) + ((y/rhs.denominator) * rhs.numerator)
+        z = 0
+        if y != 0 and x != 0:
+            if x > y:
+                z= int(x/y)
+                x = (x%y)
+            if x < y:
+                for i in range(1,int(x+1)):
+                    if y%i == 0 and x%i == 0:
+                        x /=i 
+                        y /=i
+            if x == y:
+                y =1 
+                x = 1
+        return fraction(x,y,z)
+       
+if __name__ == '__main__':
+    a = fraction(1,2)
+    b = fraction(3,4)
+    c = a + b
+
+    print (a,"+",b,"=",c)
